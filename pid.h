@@ -11,8 +11,17 @@
 
 #include "gyro_f.h"
 
-void PID(int valFin, gyro *G);
 
+typedef struct _pid{
+	float kp;
+	float kd;
+	float ki;
+	float e[2];
+	float I;
+	float uscita;
+} pid;
+
+void PID(int valFin, gyro *G, pid *C);
 
 
 #endif /* PID_H_ */

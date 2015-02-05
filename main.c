@@ -48,6 +48,7 @@ int main(void) {
 	//volatile float f = 1.1098, e = (float)exp(1);
 	//volatile double d = 1.9845637456;
 	gyro G;
+	pid C;
 
 
 	/// disabilita le interruzioni
@@ -93,7 +94,8 @@ int main(void) {
 	while(1){
 		if (procCom == 1){
 			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
-			PID(0, &G);
+			PID(0, &G, &C);
+			PWM(&C);
 			procCom = 0;
 			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
 			//PRINTF("asse x: %d\t", G.pitch);
