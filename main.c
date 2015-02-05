@@ -33,6 +33,8 @@
 #include "gyro_f.h"
 #include "uartp/uart.h"
 
+#include "pid.h"
+
 
 /// variabili globali
 int procCom = 0;
@@ -91,8 +93,7 @@ int main(void) {
 	while(1){
 		if (procCom == 1){
 			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
-			///provvede ad integrare la misura della velcita' angolare
-			misuraAngoli(&G);
+			PID(0, &G);
 			procCom = 0;
 			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
 			//PRINTF("asse x: %d\t", G.pitch);
