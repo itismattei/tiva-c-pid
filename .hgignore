@@ -1,0 +1,7 @@
+syntax: regexp
+Debug/*
+target*
+syntax: glob
+.settings/org.eclipse*
+.launches/tiv_I2C_gyro.launch
+.launches/tiva_I2C_gyro.launch
