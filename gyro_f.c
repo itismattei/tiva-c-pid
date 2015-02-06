@@ -36,7 +36,7 @@ void misuraAngoli(gyro *G){
 			z = (int16_t)((buffer[1]<< 8) + buffer[0]) - G->z0;
 			/// integrazione rettangolare: valore letto * fondo scala * intervallo di tempo di integrazione
 			/// posto a 10ms
-			f = z * DPS;
+			f = z * DPS * G->kz;
 			f *= G->tick;
 			G->yawF += f;
 

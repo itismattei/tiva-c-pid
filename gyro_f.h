@@ -37,6 +37,8 @@ typedef struct _gyro{
 	float FS;
 	/// intervallo di integrazione in ms
 	float tick;
+	/// fattori di scala per ciscun asse
+	float kz, ky, kx;
 } gyro;
 
 /// fondo scala gradi per secondo / 2^(16-1)

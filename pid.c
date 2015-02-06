@@ -10,14 +10,16 @@
 #include "pid.h"
 
 void PID(int valFin, gyro *G, pid *C){
-	float D, P;
+	float D, P, I;
 	///provvede ad integrare la misura della velcita' angolare
 	misuraAngoli(G);
 	C->e[1] = (float) (valFin - G->yaw);
 	///void pwm_motor(int delta_1, int delta_2)
 	D = C->kd * (C->e[1] - C->e[0]) / G->tick;
 	P = C->kp * C->e[1];
-	C->I += C->ki * (C->e[1] + C->e[0])/2 * G->tick;
+	I = C->I + C->ki * G->tick * (C->e[1] + C->e[0]);
+	I *= (float)0.50;
+	C->I = I;
 	C->uscita = D + P + C->I;
 	/// dispositivo con saturazione
 	if (C->uscita > 100.0)

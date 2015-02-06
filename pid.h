@@ -22,6 +22,7 @@ typedef struct _pid{
 } pid;
 
 void PID(int valFin, gyro *G, pid *C);
+void PWM(pid *C);
 
 
 #endif /* PID_H_ */

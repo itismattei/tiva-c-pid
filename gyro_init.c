@@ -50,6 +50,7 @@ void setupAssi(gyro *G, char stato){
 	G->x0 = G->y0 = G->z0 = 32767;
 	G->pitchF = G->rollF = G->yawF = G->pitchP = G->rollP = G->yawP = 0.0;
 	G->gradiSec = 0;
+	G->kz = 1.1688;
 	/// lo stato e' cosi' interpretato: bit0: x; bit1: y; bit2: z.
 	// scrivo nel registro 0x20 il valore 0x0C, cioe' banda minima, modulo on e assi on
 	/// sintassi: indirizzo slave, num parm, indirizzo reg, valore da scrivere
