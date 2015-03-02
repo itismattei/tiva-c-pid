@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include "inc/hw_ints.h"
 #include "inc/hw_i2c.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -89,6 +90,8 @@ void ConfigureUART(uint32_t baud, int numUart){
 		// Initialize the UART for console I/O.
 		//
 		UARTStdioConfig(1, baud, UART_CLK);
+		IntEnable(INT_UART1); //enable the UART interrupt
+		UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT); //only enable RX and TX interrupts
 	}
 }
 
@@ -138,7 +141,10 @@ void UART1IntHandler(void)
         //
         // Read the next character from the UART and write it back to the UART.
         //
-    	uart1buffer[RX_PTR1++]=UARTCharGetNonBlocking(UART1_BASE);
+    	uart1buffer[RX_PTR1]=UARTCharGetNonBlocking(UART1_BASE);
+    	/// echo
+    	UARTCharPutNonBlocking(UART1_BASE, uart1buffer[RX_PTR1]);
+    	RX_PTR1++;
     	RX_PTR1 &= 0xF;
         //UARTCharPutNonBlocking(UART1_BASE,
         //		dato);

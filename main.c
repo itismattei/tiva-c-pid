@@ -56,10 +56,10 @@ int main(void) {
 	/// setup di base
 	setupMCU();
 
-    /// inizializza UART0
-    ConfigureUART(115200, UART0);
     /// inizializza UART1
     ConfigureUART(115200, UART1);
+    /// inizializza UART0
+	ConfigureUART(115200, UART0);
     //inizializzo l'i2c
 	InitI2C0();
 	/// messaggio d'inizio
@@ -98,7 +98,7 @@ int main(void) {
 	while(1){
 
 		if (procCom == 1 ){
-			UARTCharPutNonBlocking(UART1_BASE, 'c');
+			//UARTCharPutNonBlocking(UART1_BASE, 'c');
 			procCom = 0;
 			/// effettua i calcoli solo se il giroscopio e' presente
 			if(G.IsPresent == OK){
