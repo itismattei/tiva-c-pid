@@ -20,4 +20,7 @@
 
 void initTimer0(int interval, gyro *G);
 
+#define		UART0			0
+#define		UART1			1
+
 #endif /* GEN_DEF_H_ */

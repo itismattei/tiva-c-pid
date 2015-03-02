@@ -104,7 +104,7 @@ void I2CSend_String(uint32_t slave_addr, char array[]){
 //read specified register on slave device
 uint32_t I2CReceive(uint32_t slave_addr, uint8_t reg){
 
-
+	uint32_t conteggio = 0;
     //specify that we are writing (a register address) to the
     //slave device
 	/// intanto prepara il master a scrivere nello slave (il registro da leggere)
@@ -123,8 +123,12 @@ uint32_t I2CReceive(uint32_t slave_addr, uint8_t reg){
     //I2CMasterControl(I2C0_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 
     //wait for MCU to finish transaction
-    while(I2CMasterBusy(I2C0_BASE));
-
+    while(I2CMasterBusy(I2C0_BASE) && conteggio < 1000000)
+    	/// sblocca l'attesa se il dispositivo non e' presente
+    	conteggio++;
+    if (conteggio >= 1000000)
+    	/// e' scattato il timeout
+    	return (0xFFFF);
     //specify that we are going to read from slave device
     HWREG(I2C0_BASE + I2C_O_MSA) = (slave_addr << 1) | true;
     //I2CMasterSlaveAddrSet(I2C0_BASE, slave_addr, true);

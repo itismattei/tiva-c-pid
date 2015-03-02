@@ -57,7 +57,9 @@ int main(void) {
 	setupMCU();
 
     /// inizializza UART0
-    ConfigureUART(115200, 0);
+    ConfigureUART(115200, UART0);
+    /// inizializza UART1
+    ConfigureUART(115200, UART1);
     //inizializzo l'i2c
 	InitI2C0();
 	/// messaggio d'inizio
@@ -81,31 +83,39 @@ int main(void) {
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
-	PRINTF("\nAzzeramento assi giroscopio\n");
-	while (blink < 70){
-		if (procCom == 1){
-			procCom = 0;
-			blink++;
+	if (G.IsPresent == OK){
+		PRINTF("\nAzzeramento assi giroscopio\n");
+		while (blink < 70){
+			if (procCom == 1){
+				procCom = 0;
+				blink++;
+			}
 		}
-	}
 
-	/// azzeramento degli assi
-	azzeraAssi(&G);
+		/// azzeramento degli assi
+		azzeraAssi(&G);
+	}
 	while(1){
-		if (procCom == 1){
-			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
-			PID(0, &G, &C);
-			PWM(&C);
+
+		if (procCom == 1 ){
+			UARTCharPutNonBlocking(UART1_BASE, 'c');
 			procCom = 0;
-			HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
-			//PRINTF("asse x: %d\t", G.pitch);
-			//PRINTF("\tasse y: %d\t", G.roll);
-			PRINTF("\tasse z: %d\n", G.yaw);
-			blink++;
-			if (blink >= 100){
-				HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + ((GPIO_PIN_2 | GPIO_PIN_1) << 2))) = 0;
-				HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) ^= GPIO_PIN_3;
-				blink = 0;
+			/// effettua i calcoli solo se il giroscopio e' presente
+			if(G.IsPresent == OK){
+				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
+				PID(0, &G, &C);
+				PWM(&C);
+				procCom = 0;
+				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
+				//PRINTF("asse x: %d\t", G.pitch);
+				//PRINTF("\tasse y: %d\t", G.roll);
+				PRINTF("\tasse z: %d\n", G.yaw);
+				blink++;
+				if (blink >= 100){
+					HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + ((GPIO_PIN_2 | GPIO_PIN_1) << 2))) = 0;
+					HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) ^= GPIO_PIN_3;
+					blink = 0;
+				}
 			}
 		}
 		/*valore = I2CReceive(GYRO_ADDR,STATUS_REG);
