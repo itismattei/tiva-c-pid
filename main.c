@@ -38,6 +38,7 @@
 
 /// variabili globali
 int procCom = 0;
+extern volatile uint8_t uart1buffer[16], RX_PTR1, TX_PTR1;
 
 int main(void) {
 	
