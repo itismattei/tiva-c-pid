@@ -32,13 +32,14 @@
 #include "gen_def.h"
 #include "gyro_f.h"
 #include "uartp/uart.h"
+#include "init.h"
 
 #include "pid.h"
 
 
 /// variabili globali
 int procCom = 0;
-extern volatile uint8_t uart1buffer[16], RX_PTR1, TX_PTR1;
+extern volatile uint8_t uart1buffer[16], RX_PTR1, READ_PTR1;
 
 int main(void) {
 	
@@ -50,6 +51,7 @@ int main(void) {
 	//volatile double d = 1.9845637456;
 	gyro G;
 	pid C;
+	syn_stat synSTATO;
 
 
 	/// disabilita le interruzioni
@@ -117,6 +119,13 @@ int main(void) {
 					HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) ^= GPIO_PIN_3;
 					blink = 0;
 				}
+			}
+
+			/// controlla se ci sono caratteri da processare
+			if (RX_PTR1 != READ_PTR1){
+				parse(&synSTATO);
+				READ_PTR1++;
+				READ_PTR1 &= DIM_READ_BUFF;
 			}
 		}
 		/*valore = I2CReceive(GYRO_ADDR,STATUS_REG);

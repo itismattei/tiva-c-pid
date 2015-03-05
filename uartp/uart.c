@@ -119,7 +119,7 @@ UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
 
 ///
 /// routine di servizio della uart1
-volatile uint8_t uart1buffer[16], RX_PTR1 = 0, TX_PTR1 = 0;
+volatile uint8_t uart1buffer[16], RX_PTR1 = 0, READ_PTR1 = 0;
 
 void UART1IntHandler(void)
 {
