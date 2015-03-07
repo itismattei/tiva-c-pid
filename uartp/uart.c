@@ -117,38 +117,5 @@ UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
 }
 
 
-///
-/// routine di servizio della uart1
-volatile uint8_t uart1buffer[16], RX_PTR1 = 0, READ_PTR1 = 0;
-
-void UART1IntHandler(void)
-{
-    uint32_t 	ui32Status, dato;
-    //
-    // Get the interrrupt status.
-    //
-    ui32Status = UARTIntStatus(UART1_BASE, true);
-
-    //
-    // Clear the asserted interrupts.
-    //
-    UARTIntClear(UART1_BASE, ui32Status);
-
-    //
-    // Loop while there are characters in the receive FIFO.
-    //
-    while(UARTCharsAvail(UART1_BASE)){
-        //
-        // Read the next character from the UART and write it back to the UART.
-        //
-    	uart1buffer[RX_PTR1]=UARTCharGetNonBlocking(UART1_BASE);
-    	/// echo
-    	UARTCharPutNonBlocking(UART1_BASE, uart1buffer[RX_PTR1]);
-    	RX_PTR1++;
-    	RX_PTR1 &= 0xF;
-        //UARTCharPutNonBlocking(UART1_BASE,
-        //		dato);
-    }
-}
 
 

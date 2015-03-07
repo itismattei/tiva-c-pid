@@ -83,6 +83,8 @@ int main(void) {
 
 	/// inizializza il timer 0 e genera un tick da 10 ms
 	initTimer0(10, &G);
+	/// inizializza il contatore della persistenza del comando
+	synSTATO.tick = 0;
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
@@ -123,10 +125,18 @@ int main(void) {
 
 			/// controlla se ci sono caratteri da processare
 			if (RX_PTR1 != READ_PTR1){
+				/// e se si', li invia al parser, che restituisce in sysSTATO il token del comando
 				parse(&synSTATO);
 				READ_PTR1++;
 				READ_PTR1 &= DIM_READ_BUFF;
 			}
+			///  ora possiede il token del comando e lo deve eseguire.
+			if (synSTATO.tick > TIMEOUT_CMD)
+				/// in casso di timeout nella persistenza del comando si deve fermare
+				synSTATO.token = STOP;
+			/// agggiorna il contatore di persistenza.
+			synSTATO.tick++;
+			/// dal token si deve estrarre il valore finale da inserire nel PID al prossimo ciclo.
 		}
 		/*valore = I2CReceive(GYRO_ADDR,STATUS_REG);
 		PRINTF("REG_STAT 0x%x\n", valore);

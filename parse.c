@@ -92,6 +92,8 @@ void convertToToken(syn_stat *STATO){
 	if (STATO->cmd[0] <= 16){
 
 	}
+	/// azzera il contatore della persistenza del comando
+	STATO->tick = 0;
 
 }
 
