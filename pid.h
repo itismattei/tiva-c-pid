@@ -16,9 +16,9 @@ typedef struct _pid{
 	float kp;
 	float kd;
 	float ki;
-	float e[2];
-	float I;
-	float uscita;
+	float e[2];		/// errori all'istante attuale e precedente
+	float I;		///valore integrale
+	float uscita;	/// valore dell'uscita
 } pid;
 
 void PID(int valFin, gyro *G, pid *C);

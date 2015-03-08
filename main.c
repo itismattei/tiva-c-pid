@@ -43,6 +43,8 @@
 /// variabili globali
 int procCom = 0;
 extern volatile uint8_t uart1buffer[16], RX_PTR1, READ_PTR1;
+extern volatile uint32_t g_ui32Base;
+extern volatile const uint32_t g_ui32UARTBase[3];
 
 int main(void) {
 	
@@ -66,6 +68,8 @@ int main(void) {
     ConfigureUART(115200, UART1);
     /// inizializza UART0
 	ConfigureUART(115200, UART0);
+	/// seleziona la uart a cui andra' 'uscita di PRINTF
+	g_ui32Base = g_ui32UARTBase[UART1];
     //inizializzo l'i2c
 	InitI2C0();
 	/// messaggio d'inizio
@@ -149,6 +153,9 @@ int main(void) {
 			/// agggiorna il contatore di persistenza.
 			synSTATO.tick++;
 			/// dal token si deve estrarre il valore finale da inserire nel PID al prossimo ciclo.
+			//TODO
+			/// RICORDARE: il PID al momento lavora sugli angoli e va aggiunto il funzionamento sulle distanze.
+			/// potrebbe essere utile avere dei differenti parametri del PID.
 		}
 		/*valore = I2CReceive(GYRO_ADDR,STATUS_REG);
 		PRINTF("REG_STAT 0x%x\n", valore);

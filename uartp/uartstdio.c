@@ -123,7 +123,8 @@ static volatile uint32_t g_ui32UARTRxReadIndex = 0;
 // The base address of the chosen UART.
 //
 //*****************************************************************************
-static uint32_t g_ui32Base = 0;
+//static uint32_t g_ui32Base = 0;
+volatile uint32_t g_ui32Base = 0;
 
 //*****************************************************************************
 //
@@ -138,7 +139,8 @@ static const char * const g_pcHex = "0123456789abcdef";
 // The list of possible base addresses for the console UART.
 //
 //*****************************************************************************
-static const uint32_t g_ui32UARTBase[3] =
+//static const uint32_t g_ui32UARTBase[3] =
+volatile const uint32_t g_ui32UARTBase[3] =
 {
     UART0_BASE, UART1_BASE, UART2_BASE
 };

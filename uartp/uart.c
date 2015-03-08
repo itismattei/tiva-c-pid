@@ -56,7 +56,7 @@ void ConfigureUART(uint32_t baud, int numUart){
 		//
 		// Use the internal 16MHz oscillator as the UART clock source.
 		//
-		UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
+		ROM_UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
 
 		//
 		// Initialize the UART for console I/O.
@@ -84,14 +84,14 @@ void ConfigureUART(uint32_t baud, int numUart){
 		//
 		// Use the internal 16MHz oscillator as the UART clock source.
 		//
-		UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
+		ROM_UARTClockSourceSet(UART1_BASE, UART_CLOCK_PIOSC);
 
 		//
 		// Initialize the UART for console I/O.
 		//
 		UARTStdioConfig(1, baud, UART_CLK);
 		IntEnable(INT_UART1); //enable the UART interrupt
-		UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT); //only enable RX and TX interrupts
+		ROM_UARTIntEnable(UART1_BASE, UART_INT_RX | UART_INT_RT); //only enable RX and TX interrupts
 	}
 }
 
@@ -112,7 +112,7 @@ UARTSend(const uint8_t *pui8Buffer, uint32_t ui32Count)
         //
         // Write the next character to the UART.
         //
-        UARTCharPutNonBlocking(UART0_BASE, *pui8Buffer++);
+        ROM_UARTCharPutNonBlocking(UART0_BASE, *pui8Buffer++);
     }
 }
 
