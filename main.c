@@ -9,6 +9,8 @@
  *  I2C bus
  *  Author: robocupjr 15
  *
+ *  Versione che gestisce il datalink tramite zigbee usando la seriale 1 (al posto di raspebbery)
+ *
  */
 
 #include <stdarg.h>
