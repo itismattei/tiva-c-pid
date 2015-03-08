@@ -37,6 +37,7 @@
 #include "init.h"
 
 #include "pid.h"
+#include "xbee/xbee.h"
 
 
 /// variabili globali
@@ -54,7 +55,7 @@ int main(void) {
 	gyro G;
 	pid C;
 	syn_stat synSTATO;
-
+	xbee XB;
 
 	/// disabilita le interruzioni
 	DI();
@@ -102,6 +103,15 @@ int main(void) {
 		/// azzeramento degli assi
 		azzeraAssi(&G);
 	}
+
+	/// test della presenza del modulo zig-bee
+	/// il modulo zig-be si attiva con al sequnza '+++' e risponde con 'OK' (maiuscolo)
+	if (testXbee() == 1)
+		// ok;
+		XB.present = 1;
+	else
+		XB.present = 0;
+
 	while(1){
 
 		if (procCom == 1 ){

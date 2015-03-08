@@ -21,6 +21,8 @@
 
 extern int procCom;
 
+///
+/// routine di servizio del timer0
 void Timer0ISR(void){
 
     //
