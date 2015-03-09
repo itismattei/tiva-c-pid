@@ -16,6 +16,6 @@ typedef struct _xbee{
 	uint32_t present;
 } xbee;
 
-
+uint32_t testXbee(void);
 
 #endif /* XBEE_H_ */

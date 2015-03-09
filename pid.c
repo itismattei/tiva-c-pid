@@ -8,6 +8,7 @@
 
 #include <math.h>
 #include "pid.h"
+#include "pwm\pwm.h"
 
 void PID(int valFin, gyro *G, pid *C){
 	float D, P, I;
@@ -31,7 +32,7 @@ void PID(int valFin, gyro *G, pid *C){
 
 }
 
-void PWM(pid *C){
+void setPWM(pid *C, pwm *PWM){
 
 	/// la rotazione antioraria e' positiva
 

@@ -38,6 +38,7 @@
 
 #include "pid.h"
 #include "xbee/xbee.h"
+#include "pwm/pwm.h"
 
 
 /// variabili globali
@@ -58,6 +59,7 @@ int main(void) {
 	pid C;
 	syn_stat synSTATO;
 	xbee XB;
+	pwm PWM;
 
 	/// disabilita le interruzioni
 	DI();
@@ -92,6 +94,8 @@ int main(void) {
 	initTimer0(10, &G);
 	/// inizializza il contatore della persistenza del comando
 	synSTATO.tick = 0;
+	/// inizializza il pwm
+	pwm_init(&PWM);
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
@@ -110,12 +114,13 @@ int main(void) {
 
 	/// test della presenza del modulo zig-bee
 	/// il modulo zig-be si attiva con al sequnza '+++' e risponde con 'OK' (maiuscolo)
-	if (testXbee() == 1)
+	if (testXbee() == 0)
 		// ok;
 		XB.present = 1;
 	else
 		XB.present = 0;
 
+	pwm_power(10, 75, &PWM);
 	while(1){
 
 		if (procCom == 1 ){
@@ -125,7 +130,7 @@ int main(void) {
 			if(G.IsPresent == OK){
 				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
 				PID(0, &G, &C);
-				PWM(&C);
+				setPWM(&C, &PWM);
 				procCom = 0;
 				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
 				//PRINTF("asse x: %d\t", G.pitch);

@@ -7,3 +7,4 @@ syntax: glob
 .launches/tiva_I2C_gyro.launch
 .launches/tiva_pid_c.launch
 Release/*
+.launches/tiva-c-pid.launch

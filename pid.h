@@ -10,6 +10,7 @@
 #define PID_H_
 
 #include "gyro_f.h"
+#include "pwm/pwm.h"
 
 
 typedef struct _pid{
@@ -21,8 +22,10 @@ typedef struct _pid{
 	float uscita;	/// valore dell'uscita
 } pid;
 
+/// calcola l'aggiornamento del PID digital
 void PID(int valFin, gyro *G, pid *C);
-void PWM(pid *C);
+/// calcola il valore da fornire al PWM
+void setPWM(pid *C, pwm *P);
 
 
 #endif /* PID_H_ */

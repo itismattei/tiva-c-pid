@@ -132,13 +132,13 @@ void setupMCU(void){
 	// Set the system clock to run at 80Mhz off PLL with external crystal as
 	// reference.
 	//
-	SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
+	ROM_SysCtlClockSet(SYSCTL_SYSDIV_2_5 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN | SYSCTL_XTAL_16MHZ);
 
 	/// abilita la porta F
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
-	GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, BLUE_LED | GPIO_PIN_1 | GPIO_PIN_3);
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
+	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, BLUE_LED | GPIO_PIN_1 | GPIO_PIN_3);
 	/// spegne i led
-	GPIOPinWrite(GPIO_PORTF_BASE, BLUE_LED | GPIO_PIN_1, 0);
+	ROM_GPIOPinWrite(GPIO_PORTF_BASE, BLUE_LED | GPIO_PIN_1, 0);
 	//
 	// Set the pin direction and mode.
 	//
@@ -158,8 +158,9 @@ void setupMCU(void){
 	///  p. 654 U.G.)
 	while(HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_4 << 2))) == GPIO_PIN_4);
 
+
 	//setup PB0 per scopi di debug
-	SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 	/// PB0 in uscita
 	HWREG(GPIO_PORTB_BASE + GPIO_O_DIR) 	|= GPIO_PIN_0;
 	/// no alternate function
