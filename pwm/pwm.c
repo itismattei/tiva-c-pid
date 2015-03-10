@@ -35,14 +35,14 @@
 
 ///
 /// direzione del mezzo
-void pwm_dir(int dir_1, int dir_2){
+void pwm_dir(pwm *p){
 	/*  in1 = in3 = 1; in2 = in4 = 0  avanti
 	 *  in1 = in3 = 0; in2 = in4 = 1  indietro
 	 *  in1 = 1, in2 = 0; in3 = 0, in4 = 1 rotazione antioraria
 	 *  in1 = 0, in2 = 1; in3 = 1, in4 = 0 rotazione oraria
 	 *
 	 *  */
-	uint8_t direzione = ((dir_1 & 0xFF) << 4) | (dir_2 & 0xFF);
+	uint8_t direzione = ((p->dir_1 & 0xFF) << 4) | (p->dir_2 & 0xFF);
 	switch(direzione){
 	case 0x11:
 		//avanti: IN1A = 1, IN2A = 1
@@ -94,11 +94,11 @@ void pwm_dir(int dir_1, int dir_2){
 // Funzione per mandare avanti i motori
 //
 //*****************************************************************************
+//void pwm_power(int delta_1, int delta_2, pwm *p)
+void pwm_power(pwm *p){
 
-void pwm_power(int delta_1, int delta_2, pwm *p){
-
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * delta_1 / 100);
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * delta_2 / 100);
+	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * p->delta_1 / 100);
+	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * p->delta_2 / 100);
 
 }
 
@@ -159,6 +159,8 @@ void pwm_init(pwm *p){
     ROM_PWMOutputState(PWM0_BASE, PWM_OUT_3_BIT|PWM_OUT_2_BIT, true);
 
     p->freq = SysCtlClockGet() / 16000;
-    pwm_power(0, 0, p);
+    p->delta_1 = 0;
+    p->delta_2 = 0;
+    pwm_power(p);
 
 }
