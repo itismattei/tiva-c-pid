@@ -190,7 +190,7 @@ void InitI2C0(void)
 
     //clear I2C FIFOs
     /// qui non ho trovato il registro I2C_FIFOCTL
-    HWREG(I2C0_BASE + I2C_O_FIFOCTL) = 80008000;
+    //HWREG(I2C0_BASE + I2C_O_FIFOCTL) = 80008000;
 }
 
 
