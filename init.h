@@ -31,9 +31,9 @@
 typedef struct _syn_stat{
 	int ST;
 	uint8_t cmd[2];
-	uint8_t l_cmd;
-	uint8_t token;
-	uint8_t tick;
+	uint8_t l_cmd;	/// lunghezza in bytes del comando
+	uint8_t token;	/// valore numerico del comando
+	uint8_t tick;	/// tempo di persistenza del comando
 } syn_stat;
 
 void parse(syn_stat *);
