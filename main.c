@@ -84,7 +84,7 @@ int main(void) {
 	/// inizializza il giroscopio
 	initGyro(&G, Z_AXIS);
 
-	/// inizializza l'accelrometro
+	//// inizializza l'accelrometro
 	//stato =  writeI2CByte(CTRL_REG1_A, ODR1 + ODR0 + ZaxEN + YaxEN + XaxEN);
 	// scrivo nel registro 0x20 il valore 0x0F, cioe' banda minima, modulo on e assi on
 	/// sintassi: indirizzo slave, num parm, indirizzo reg, valore da scrivere
@@ -120,7 +120,7 @@ int main(void) {
 	else
 		XB.present = 0;
 
-	pwm_power(10, 75, &PWM);
+	pwm_power(&PWM);
 	while(1){
 
 		if (procCom == 1 ){

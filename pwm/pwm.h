@@ -23,13 +23,18 @@
 typedef struct _pwm{
 
 	uint32_t freq;
+	uint32_t delta_1;
+	uint32_t delta_2;
+	uint8_t  dir_1;
+	uint8_t dir_2;
 
 } pwm;
 
 
 void pwm_init(pwm *);
-void pwm_power(int delta_1, int delta_2, pwm*);
-void pwm_dir(int dir_1, int dir_2);
+//void pwm_power(int delta_1, int delta_2, pwm*);
+void pwm_power(pwm *);
+void pwm_dir(pwm *);
 
 
 
