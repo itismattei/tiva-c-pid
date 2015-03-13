@@ -131,7 +131,7 @@ int main(void) {
 			/// effettua i calcoli solo se il giroscopio e' presente
 			if(G.IsPresent == OK){
 				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
-				PID(0, &G, &C);
+				PID(0, &G, &C, &PWM);
 				setPWM(&C, &PWM);
 				procCom = 0;
 				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
