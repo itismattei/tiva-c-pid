@@ -10,6 +10,13 @@
 #include "pid.h"
 #include "pwm\pwm.h"
 
+
+void setKpid(pid *C, float kp, float kd, float ki){
+	C->kp = kp;
+	C->kd = kd;
+	C->ki = ki;
+}
+
 void PID(int valFin, gyro *G, pid *C){
 	float D, P, I;
 	///provvede ad integrare la misura della velcita' angolare
@@ -34,6 +41,11 @@ void PID(int valFin, gyro *G, pid *C){
 
 void setPWM(pid *C, pwm *PWM){
 
+	uint32_t valore;
+	valore = (uint32_t) C->uscita * 0.95;
+	/// la relazione col PWM è lineare: l'uscita del pid comanda il delta del PWM
+	pwm_power(valore, valore, PWM);
+	//TODO: effettuare la suddivisione tra rotazione e movimento lineare
 	/// la rotazione antioraria e' positiva
 
 
