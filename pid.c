@@ -17,7 +17,7 @@ void setKpid(pid *C, float kp, float kd, float ki){
 	C->ki = ki;
 }
 
-void PID(int valFin, gyro *G, pid *C){
+void PID(int valFin, gyro *G, pid *C, pwm *PWM){
 	float D, P, I;
 	///provvede ad integrare la misura della velcita' angolare
 	misuraAngoli(G);
@@ -36,18 +36,12 @@ void PID(int valFin, gyro *G, pid *C){
 			C->uscita = -100.0;
 	//aggiornamento dell'uscita
 	C->e[0] = C->e[1];
+	//TODO: scegliere tra spostamento lineare o rotaotrio
+	PWM->delta_1 = (uint32_t) C->uscita * 0.95;
 
 }
 
 void setPWM(pid *C, pwm *PWM){
-
-	uint32_t valore;
-	valore = (uint32_t) C->uscita * 0.95;
-	/// la relazione col PWM è lineare: l'uscita del pid comanda il delta del PWM
-	pwm_power(valore, valore, PWM);
-	//TODO: effettuare la suddivisione tra rotazione e movimento lineare
-	/// la rotazione antioraria e' positiva
-
 
 
 }

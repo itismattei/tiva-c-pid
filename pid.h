@@ -23,7 +23,7 @@ typedef struct _pid{
 } pid;
 
 /// calcola l'aggiornamento del PID digital
-void PID(int valFin, gyro *G, pid *C);
+void PID(int valFin, gyro *G, pid *C, pwm *P);
 /// calcola il valore da fornire al PWM
 void setPWM(pid *C, pwm *P);
 /// imposta i coefficienti del PID
