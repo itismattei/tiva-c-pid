@@ -96,6 +96,8 @@ int main(void) {
 	synSTATO.tick = 0;
 	/// inizializza il pwm
 	pwm_init(&PWM);
+	/// imposta i parametri del PID
+	setKpid(&C, 1.1, 2.1, 0.5);
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
