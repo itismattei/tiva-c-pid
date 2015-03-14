@@ -23,11 +23,31 @@
 #include "pwm.h"
 
 
+///******************************************
+/*				PIN PWM
+ *
+ * 		Tiva		MOTORE destro				L293(pin)
+ *
+ * 	PB4(M0PWM2)				delta_1				chip enable 1 (1)
+ * 		PB6				In_1				input 1(2)
+ * 		PB7				In_2				input 2(9)
+ * 		 -				dir_1					-
+ *
+ *
+ * 		Tiva		MOTORE sinistro				L293(pin)
+ *
+ * 	PB5(M0PWM3)			delta_2				chip enable 2 (11)
+ * 		PA3				In_3				input 3(12)
+ * 		PA2				In_4				input 4(19)
+ * 		 -				dir_2					 -
+ *
+ *
+ *******************************************///
 
-#define IN1 	GPIO_PIN_6
-#define IN2 	GPIO_PIN_7
-#define IN3 	GPIO_PIN_3
-#define IN4 	GPIO_PIN_2
+#define IN1 	GPIO_PIN_6		//PB6
+#define IN2 	GPIO_PIN_7		//PB7
+#define IN3 	GPIO_PIN_3		//PA3
+#define IN4 	GPIO_PIN_2		//PA2
 
 
 ///in1, in2 -> pb6, pb7
@@ -43,6 +63,9 @@ void pwm_dir(pwm *p){
 	 *
 	 *  */
 	uint8_t direzione = ((p->dir_1 & 0xFF) << 4) | (p->dir_2 & 0xFF);
+
+	// direzione X.X.X.X:Y.Y.Y.Y
+	//           in1.in2:in3.in4
 	switch(direzione){
 	case 0x11:
 		//avanti: IN1A = 1, IN2A = 1
@@ -67,7 +90,7 @@ void pwm_dir(pwm *p){
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) &=  ~IN2;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) |=  IN4;
 	break;
-
+		//0001:0010
 	case 0x12:
 		// rotazione oraria
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) &=  ~IN4;
@@ -97,8 +120,8 @@ void pwm_dir(pwm *p){
 //void pwm_power(int delta_1, int delta_2, pwm *p)
 void pwm_power(pwm *p){
 
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * p->delta_1 / 100);
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * p->delta_2 / 100);
+	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * p->delta_1 / 100);    //delta_1 è del motore dx, uscita PWM-> M0PWM2
+	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * p->delta_2 / 100);    //delta_2 è del motore sx, uscita PWM-> M0PWM3
 
 }
 
@@ -124,8 +147,8 @@ void pwm_init(pwm *p){
 	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_4 | GPIO_PIN_5);
 
 
-	int ulPeriod;
-    ulPeriod = SysCtlClockGet() / 16000; //PWM frequency 400HZ
+//	int ulPeriod;
+//    ulPeriod = SysCtlClockGet() / 16000; //PWM frequency 400HZ
     ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_2);  //divisore per 2
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0); //modulo pwm numero 0
 
