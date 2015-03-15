@@ -41,6 +41,7 @@
 #include "pid.h"
 #include "xbee/xbee.h"
 #include "pwm/pwm.h"
+#include "adc/adc.h"
 
 void PortF_ISR(void){
 
@@ -54,7 +55,7 @@ extern volatile const uint32_t g_ui32UARTBase[3];
 
 int main(void) {
 	
-	volatile uint32_t valore = 0, i, blink = 0;
+	volatile uint32_t valore = 0, i, blink = 0, contatore;
 	volatile int32_t arrot;
 	volatile int16_t val1 = 0, x, y, z;
 
@@ -69,6 +70,7 @@ int main(void) {
 	syn_stat synSTATO;
 	xbee XB;
 	pwm PWM;
+	distanza dist;
 
 	/// disabilita le interruzioni
 	DI();
@@ -107,6 +109,7 @@ int main(void) {
 	pwm_init(&PWM);
 	/// imposta i parametri del PID
 	setKpid(&C, 1.1, 2.1, 0.5);
+	initAdc(&dist);
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
@@ -132,27 +135,38 @@ int main(void) {
 		XB.present = 0;
 
 	pwm_power(&PWM);
+	contatore = 0;
+	/// task principale
 	while(1){
 
 		if (procCom == 1 ){
 			//UARTCharPutNonBlocking(UART1_BASE, 'c');
 			procCom = 0;
+			contatore++;
 			/// effettua i calcoli solo se il giroscopio e' presente
-			if(G.IsPresent == OK){
-				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
-				PID(0, &G, &C, &PWM);
-				setPWM(&C, &PWM);
-				procCom = 0;
-				HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
+			/// TODO: il PID viene calcolato ongi 10ms oppure ogni 20ms? Come è meglio?
+			if(G.IsPresent == OK)
+				if( contatore == 2){
+					/// ogni 20 ms effettua il calcolo del PID
+					contatore = 0;
+					HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
+					PID(0, &G, &C, &PWM);
+					setPWM(&C, &PWM);
+					procCom = 0;
+					HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) &=  ~GPIO_PIN_0;
+					blink++;
+					/// lampeggio del led con periodo di 2 s.
+					if (blink >= 100){
+						HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + ((GPIO_PIN_2 | GPIO_PIN_1) << 2))) = 0;
+						HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) ^= GPIO_PIN_3;
+						blink = 0;
+					}
+				///provvede ad integrare la misura della velcita' angolare ogni 10 ms
+				misuraAngoli(&G);
 				//PRINTF("asse x: %d\t", G.pitch);
 				//PRINTF("\tasse y: %d\t", G.roll);
 				PRINTF("\tasse z: %d\n", G.yaw);
-				blink++;
-				if (blink >= 100){
-					HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + ((GPIO_PIN_2 | GPIO_PIN_1) << 2))) = 0;
-					HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) ^= GPIO_PIN_3;
-					blink = 0;
-				}
+				PRINTF("uscita PID: %d\n", C.uscita);
 			}
 
 			/// controlla se ci sono caratteri da processare

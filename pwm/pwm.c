@@ -68,6 +68,7 @@ void pwm_dir(pwm *p){
 	//           in1.in2:in3.in4
 	switch(direzione){
 	case 0x11:
+	case 0x31:		/// effettua una rotazione a grande angolo
 		//avanti: IN1A = 1, IN2A = 1
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) =  0;
@@ -76,6 +77,7 @@ void pwm_dir(pwm *p){
 	break;
 
 	case 0x22:
+	case 0x32:		/// effettua una rotazione a grande raggio
 		// indietro: IN1B = 1, IN2B = 1
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) =  0;
@@ -85,6 +87,7 @@ void pwm_dir(pwm *p){
 
 	case 0x21:
 		// rotazione antioraria: IN1B = 1, IN2B = 1
+		/// rotazione su asse centrale
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) |=  IN1;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) =  0;
@@ -93,12 +96,14 @@ void pwm_dir(pwm *p){
 		//0001:0010
 	case 0x12:
 		// rotazione oraria
+		/// rotazione su asse centrale
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) |=  IN2;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) =  0;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) |=  IN3;
 
 	break;
+
 
 	case 0x00:
 	default:
