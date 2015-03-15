@@ -120,8 +120,8 @@ void pwm_dir(pwm *p){
 //void pwm_power(int delta_1, int delta_2, pwm *p)
 void pwm_power(pwm *p){
 
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * p->delta_1 / 100);    //delta_1 è del motore dx, uscita PWM-> M0PWM2
-	PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * p->delta_2 / 100);    //delta_2 è del motore sx, uscita PWM-> M0PWM3
+	ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2, p->freq * p->delta_1 / 100);    //delta_1 è del motore dx, uscita PWM-> M0PWM2
+	ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3, p->freq * p->delta_2 / 100);    //delta_2 è del motore sx, uscita PWM-> M0PWM3
 
 }
 
@@ -129,7 +129,7 @@ void pwm_power(pwm *p){
 void pwm_init(pwm *p){
 
 
-    p->freq = SysCtlClockGet() / 16000;
+    p->freq = ROM_SysCtlClockGet() / 16000;
     p->delta_1 = 0;
     p->delta_2 = 0;
 
@@ -151,9 +151,6 @@ void pwm_init(pwm *p){
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
 	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, GPIO_PIN_4 | GPIO_PIN_5);
 
-
-//	int ulPeriod;
-//    ulPeriod = SysCtlClockGet() / 16000; //PWM frequency 400HZ
     ROM_SysCtlPWMClockSet(SYSCTL_PWMDIV_2);  //divisore per 2
     ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_PWM0); //modulo pwm numero 0
 
@@ -177,9 +174,6 @@ void pwm_init(pwm *p){
     ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_2,0);
     ROM_PWMPulseWidthSet(PWM0_BASE, PWM_OUT_3,0);
 
-
-
-
     // Enable the PWM generator
     ROM_PWMGenEnable(PWM0_BASE, PWM_GEN_1);
 
@@ -190,5 +184,4 @@ void pwm_init(pwm *p){
     p->delta_1 = 0;
     p->delta_2 = 0;
     pwm_power(p);
-
 }
