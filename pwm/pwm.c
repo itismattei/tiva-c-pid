@@ -128,6 +128,11 @@ void pwm_power(pwm *p){
 
 void pwm_init(pwm *p){
 
+
+    p->freq = SysCtlClockGet() / 16000;
+    p->delta_1 = 0;
+    p->delta_2 = 0;
+
 	/// Abilita le porte usate dal PWM, e per il comando della direzione dei motori,
 	/// anche se potrebbero gia' esserlo stato inaltre parti del programma
 	ROM_SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
@@ -165,7 +170,7 @@ void pwm_init(pwm *p){
 
 
     //Set the Period (expressed in clock ticks)
-    ROM_PWMGenPeriodSet(PWM0_BASE, PWM_GEN_1, ulPeriod);
+    ROM_PWMGenPeriodSet(PWM0_BASE, PWM_GEN_1, p->freq);
 
 
     //Set PWM duty-50% (Period /2)
