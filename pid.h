@@ -14,12 +14,13 @@
 
 
 typedef struct _pid{
-	float kp;
-	float kd;
-	float ki;
-	float e[2];		/// errori all'istante attuale e precedente
-	float I;		///valore integrale
-	float uscita;	/// valore dell'uscita
+	float 		kp;
+	float 		kd;
+	float 		ki;
+	float 		e[2];		/// errori all'istante attuale e precedente
+	float 		I;		///valore integrale
+	float 		uscita;	/// valore dell'uscita
+	uint32_t 	tipo;
 } pid;
 
 /// calcola l'aggiornamento del PID digital

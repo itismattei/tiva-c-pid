@@ -36,8 +36,21 @@ void PID(int valFin, gyro *G, pid *C, pwm *PWM){
 			C->uscita = -100.0;
 	//aggiornamento dell'uscita
 	C->e[0] = C->e[1];
-	//TODO: scegliere tra spostamento lineare o rotaotrio
-	PWM->delta_1 = (uint32_t) C->uscita * 0.95;
+	if (C->tipo == 0){
+
+		/// avanti oppure indietro
+		PWM->delta_1 = (uint32_t) C->uscita * 0.95;
+		PWM->delta_2 =PWM->delta_1;
+	}
+	else
+		if (C->tipo == 1){
+		/// rotazione soft
+		//TODO: DA FARE
+		}
+		else {
+			/// rotazione brusca
+		}
+
 
 }
 
