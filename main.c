@@ -16,6 +16,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "inc/hw_i2c.h"
 #include "inc/hw_memmap.h"
 #include "inc/hw_types.h"
@@ -40,6 +41,9 @@
 #include "xbee/xbee.h"
 #include "pwm/pwm.h"
 
+void PortF_ISR(void){
+
+}
 
 /// variabili globali
 int procCom = 0;
@@ -52,11 +56,15 @@ int main(void) {
 	volatile uint32_t valore = 0, i, blink = 0;
 	volatile int32_t arrot;
 	volatile int16_t val1 = 0, x, y, z;
+
 	//uint8_t buffer[8];
 	//volatile float f = 1.1098, e = (float)exp(1);
 	//volatile double d = 1.9845637456;
 	gyro G;
-	pid C;
+	/// servono differenti PID, almeno uno per la rotazione ed uno per lo spostamento
+	/// per la rotazione sarebbero interessante usarne 2, uno per la ortazione soft ed uno per la rotazione
+	/// brusca.
+	pid C, CRot[2];
 	syn_stat synSTATO;
 	xbee XB;
 	pwm PWM;
