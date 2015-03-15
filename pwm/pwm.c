@@ -69,33 +69,33 @@ void pwm_dir(pwm *p){
 	switch(direzione){
 	case 0x11:
 		//avanti: IN1A = 1, IN2A = 1
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) &=  ~IN4;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) &=  ~IN2;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) =  0;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) |=  IN1;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) |=  IN3;
 	break;
 
 	case 0x22:
 		// indietro: IN1B = 1, IN2B = 1
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) &=  ~IN3;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) &=  ~IN1;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) =  0;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) |=  IN2;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) |=  IN4;
 	break;
 
 	case 0x21:
 		// rotazione antioraria: IN1B = 1, IN2B = 1
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) &=  ~IN3;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) |=  IN1;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) &=  ~IN2;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) =  0;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) |=  IN4;
 	break;
 		//0001:0010
 	case 0x12:
 		// rotazione oraria
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) &=  ~IN4;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) =  0;
 		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) |=  IN2;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) &=  ~IN1;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) =  0;
 		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) |=  IN3;
 
 	break;
@@ -103,10 +103,10 @@ void pwm_dir(pwm *p){
 	case 0x00:
 	default:
 		// stop
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) &=  ~IN4;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) &=  ~IN2;
-		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) &=  ~IN1;
-		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) &=  ~IN3;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN4) << 2)) =  0;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN2) << 2)) =  0;
+		HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (IN1) << 2)) =  0;
+		HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (IN3) << 2)) =  0;
 	break;
 	}
 }
@@ -143,8 +143,8 @@ void pwm_init(pwm *p){
 	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTB_BASE, IN1 | IN2);
 	ROM_GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE, IN3 | IN4);
 	/// azzeramento delle uscite dei pin
-	HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_6 | GPIO_PIN_7) << 2)) &=  ~ (GPIO_PIN_6 | GPIO_PIN_7);
-	HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (GPIO_PIN_3 | GPIO_PIN_2) << 2)) &=  ~ (GPIO_PIN_3 | GPIO_PIN_2);
+	HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_6 | GPIO_PIN_7) << 2)) =  0;
+	HWREG(GPIO_PORTA_BASE + (GPIO_O_DATA + (GPIO_PIN_3 | GPIO_PIN_2) << 2)) =  0;
     //
     // Enable the GPIO port B
     //
