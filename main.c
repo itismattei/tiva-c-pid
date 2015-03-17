@@ -113,7 +113,7 @@ int main(void) {
 	/// abilita le interruzioni
 	EI();
 	/// attende che il sensore vada a regime
-	if (G.IsPresent == OK){
+	/*if (G.IsPresent == OK){
 		PRINTF("\nAzzeramento assi giroscopio\n");
 		while (blink < 70){
 			if (procCom == 1){
@@ -124,19 +124,27 @@ int main(void) {
 
 		/// azzeramento degli assi
 		azzeraAssi(&G);
-	}
+	}*/
 
 	/// test della presenza del modulo zig-bee
 	/// il modulo zig-be si attiva con al sequnza '+++' e risponde con 'OK' (maiuscolo)
-	if (testXbee() == 0)
+	/*if (testXbee() == 0)
 		// ok;
 		XB.present = 1;
 	else
-		XB.present = 0;
+		XB.present = 0;*/
 
 	pwm_power(&PWM);
 	contatore = 0;
+	PWM.dir_1 = 1;
+	PWM.dir_2 = 1;
+	pwm_dir(&PWM) ;
+	PWM.delta_1 = 70;
+	PWM.delta_2 = 70;
+	pwm_power(&PWM);
 	/// task principale
+	while(1)
+		HWREG(GPIO_PORTF_BASE + (GPIO_O_DATA + (GPIO_PIN_3 << 2))) = GPIO_PIN_3;
 	while(1){
 
 		if (procCom == 1 ){
