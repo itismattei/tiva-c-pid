@@ -8,6 +8,13 @@
 #ifndef ACCEL_INIT_H_
 #define ACCEL_INIT_H_
 
+#include <stdbool.h>
+#include <stdint.h>
+#include "../tiva_i2c.h"
+#include "../uartp/uart.h"
+#include "../uartp/uartstdio.h"
+
+
 ///////////////////////////////////////////////
 ///// ADDRESS
 ///////////////////////////////////////////////
@@ -49,7 +56,10 @@
 #define		FS0				16
 #define		FS1				32
 
+#define 	MUL_READ		0x80
 
-
+bool testAccel(void);
+void impostaAccel();
+void misuraAccelerazioni(uint8_t buffer[]);
 
 #endif /* ACCEL_INIT_H_ */
