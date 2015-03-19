@@ -32,7 +32,7 @@
 #include "uartp/cmdline.h"
 #include "tiva_i2c.h"
 #include "gyro_init.h"
-#include "accelInit.h"
+#include "accel/accel_init.h"
 #include "gen_def.h"
 #include "gyro_f.h"
 #include "uartp/uart.h"
@@ -42,6 +42,7 @@
 #include "xbee/xbee.h"
 #include "pwm/pwm.h"
 #include "adc/adc.h"
+#include "accel/accel_init.h"
 
 void PortF_ISR(void){
 
@@ -59,7 +60,7 @@ int main(void) {
 	volatile int32_t arrot;
 	volatile int16_t val1 = 0, x, y, z;
 
-	//uint8_t buffer[8];
+	uint8_t buffer[8];
 	//volatile float f = 1.1098, e = (float)exp(1);
 	//volatile double d = 1.9845637456;
 	gyro G;
@@ -82,7 +83,7 @@ int main(void) {
     /// inizializza UART0
 	ConfigureUART(115200, UART0);
 	/// seleziona la uart a cui andra' 'uscita di PRINTF
-	g_ui32Base = g_ui32UARTBase[UART1];
+	g_ui32Base = g_ui32UARTBase[UART0];
     //inizializzo l'i2c
 	InitI2C0();
 	/// messaggio d'inizio
@@ -128,14 +129,20 @@ int main(void) {
 
 	/// test della presenza del modulo zig-bee
 	/// il modulo zig-be si attiva con al sequnza '+++' e risponde con 'OK' (maiuscolo)
-	if (testXbee() == 0)
+	if (testXbee() == 0){
 		// ok;
 		XB.present = 1;
-	else
+		PRINTF("Modulo xbee presente.\n");
+	}
+	else{
 		XB.present = 0;
+		PRINTF("Modulo xbee non presente.\n");
+	}
 
 	pwm_power(&PWM);
 	contatore = 0;
+	testAccel();
+	impostaAccel();
 	/// task principale
 	while(1){
 
@@ -145,6 +152,7 @@ int main(void) {
 			contatore++;
 			/// effettua i calcoli solo se il giroscopio e' presente
 			/// TODO: il PID viene calcolato ongi 10ms oppure ogni 20ms? Come è meglio?
+			misuraAccelerazioni(buffer);
 			if(G.IsPresent == OK)
 				if( contatore == 2){
 					/// ogni 20 ms effettua il calcolo del PID
@@ -166,7 +174,7 @@ int main(void) {
 				//PRINTF("asse x: %d\t", G.pitch);
 				//PRINTF("\tasse y: %d\t", G.roll);
 				PRINTF("\tasse z: %d\n", G.yaw);
-				PRINTF("uscita PID: %d\n", C.uscita);
+				//PRINTF("uscita PID: %d\n", C.uscita);
 			}
 
 			/// controlla se ci sono caratteri da processare
@@ -187,25 +195,5 @@ int main(void) {
 			/// RICORDARE: il PID al momento lavora sugli angoli e va aggiunto il funzionamento sulle distanze.
 			/// potrebbe essere utile avere dei differenti parametri del PID.
 		}
-		/*valore = I2CReceive(GYRO_ADDR,STATUS_REG);
-		PRINTF("REG_STAT 0x%x\n", valore);
-		if (valore != 0){
-			/// legge i dati da tutti i registri del giroscopio
-			//stato = readI2C_N_Byte(OUT_X_L_M, 6, buff);			/// compass
-			I2CReceiveN(GYRO_ADDR,OUT_X_L | MUL_READ , 6, buffer);
-
-			//valore = readI2CByteFromAddress(STATUS_REG, &stato);
-			x = (int16_t)((buffer[1]<< 8) + buffer[0]) - G.x0;
-			y = (int)((buffer[3]<< 8) + buffer[2]) - G.y0;
-			z = (int)((buffer[5]<< 8) + buffer[4]) - G.z0;
-			PRINTF("asse x: %d\t",x);
-			PRINTF("\tasse y: %d\t",y);
-			PRINTF("\tasse z: %i\r\n", z);
-			//printf("contatore: %d\r\n", contatore);
-			//i = 0;
-			//contatore = 0;
-			//P1OUT ^= 1;
-			for (i = 0; i < 50000; i++);
-	    }*/
 	}
 }
