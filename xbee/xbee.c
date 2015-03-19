@@ -15,7 +15,7 @@
 #include "xbee.h"
 
 extern volatile uint8_t uart1buffer[16], RX_PTR1, READ_PTR1;
-extern int procCom;
+extern volatile int procCom;
 
 
 ///
