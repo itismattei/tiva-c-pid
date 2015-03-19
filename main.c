@@ -49,7 +49,7 @@ void PortF_ISR(void){
 }
 
 /// variabili globali
-int procCom = 0;
+volatile int procCom = 0;
 extern volatile uint8_t uart1buffer[16], RX_PTR1, READ_PTR1;
 extern volatile uint32_t g_ui32Base;
 extern volatile const uint32_t g_ui32UARTBase[3];

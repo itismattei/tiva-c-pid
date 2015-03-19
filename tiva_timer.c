@@ -19,7 +19,7 @@
 #include "gyro_f.h"
 
 
-extern int procCom;
+extern volatile int procCom;
 
 ///
 /// routine di servizio del timer0
