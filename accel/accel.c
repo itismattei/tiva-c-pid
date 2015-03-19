@@ -27,7 +27,7 @@ bool testAccel(){
 	return false;
 }
 
-void impostaAccel(){
+void impostaAccel(accelerazione *A){
 
 	volatile uint32_t valore;
 	/// imposta il campionamento a 50 sample / s ed abilita i 3 assi
@@ -35,15 +35,19 @@ void impostaAccel(){
 	valore = I2CReceive(ACCEL_ADDR, CTRL_REG1_A);
 }
 
-void misuraAccelerazioni(uint8_t buffer[]){
+void misuraAccelerazioni(accelerazione *A){
 
 	volatile int x, y, z;
+	uint8_t buffer[8];
 	/// legge i valori degli assi
 	if((I2CReceive(ACCEL_ADDR, STATUS_REG_A) & 0xF) != 0){
 		I2CReceiveN(ACCEL_ADDR, OUT_X_L_A | MUL_READ , 6, buffer);
 		x = (int16_t)((buffer[1]<< 8) + buffer[0]);
 		y = (int16_t)((buffer[3]<< 8) + buffer[2]);
 		z = (int16_t)((buffer[5]<< 8) + buffer[4]);
+		A->v[0] = (float) x * 2 / 32768;
+		A->v[1] = (float) y * 2 / 32768;
+		A->v[2] = (float) z * 2 / 32768;
 		PRINTF("acc x %d\t acc y %d\t acc z %d\n", x, y, z);
 	}
 }

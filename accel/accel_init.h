@@ -58,8 +58,13 @@
 
 #define 	MUL_READ		0x80
 
+typedef struct _accel{
+	/// valori lungo i 3 assi
+	float v[3];
+} accelerazione;
+
 bool testAccel(void);
-void impostaAccel();
-void misuraAccelerazioni(uint8_t buffer[]);
+void impostaAccel(accelerazione *);
+void misuraAccelerazioni(accelerazione *);
 
 #endif /* ACCEL_INIT_H_ */

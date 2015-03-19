@@ -60,7 +60,7 @@ int main(void) {
 	volatile int32_t arrot;
 	volatile int16_t val1 = 0, x, y, z;
 
-	uint8_t buffer[8];
+	//uint8_t buffer[8];
 	//volatile float f = 1.1098, e = (float)exp(1);
 	//volatile double d = 1.9845637456;
 	gyro G;
@@ -72,6 +72,7 @@ int main(void) {
 	xbee XB;
 	pwm PWM;
 	distanza dist;
+	accelerazione A;
 
 	/// disabilita le interruzioni
 	DI();
@@ -95,13 +96,6 @@ int main(void) {
 	PRINTF("Frequenza del clock %d\n", valore);
 	/// inizializza il giroscopio
 	initGyro(&G, Z_AXIS);
-
-	//// inizializza l'accelrometro
-	//stato =  writeI2CByte(CTRL_REG1_A, ODR1 + ODR0 + ZaxEN + YaxEN + XaxEN);
-	// scrivo nel registro 0x20 il valore 0x0F, cioe' banda minima, modulo on e assi on
-	/// sintassi: indirizzo slave, num parm, indirizzo reg, valore da scrivere
-	//I2CSend(ACCEL_ADDR, 2, CTRL_REG1_A, ODR1 + ODR0 + ZaxEN + YaxEN + XaxEN);
-
 	/// inizializza il timer 0 e genera un tick da 10 ms
 	initTimer0(10, &G);
 	/// inizializza il contatore della persistenza del comando
@@ -141,8 +135,14 @@ int main(void) {
 
 	pwm_power(&PWM);
 	contatore = 0;
+
+	//// inizializza l'accelrometro
+	//stato =  writeI2CByte(CTRL_REG1_A, ODR1 + ODR0 + ZaxEN + YaxEN + XaxEN);
+	// scrivo nel registro 0x20 il valore 0x0F, cioe' banda minima, modulo on e assi on
+	/// sintassi: indirizzo slave, num parm, indirizzo reg, valore da scrivere
+	//I2CSend(ACCEL_ADDR, 2, CTRL_REG1_A, ODR1 + ODR0 + ZaxEN + YaxEN + XaxEN);
 	testAccel();
-	impostaAccel();
+	impostaAccel(&A);
 	/// task principale
 	while(1){
 
@@ -152,9 +152,9 @@ int main(void) {
 			contatore++;
 			/// effettua i calcoli solo se il giroscopio e' presente
 			/// TODO: il PID viene calcolato ongi 10ms oppure ogni 20ms? Come è meglio?
-			misuraAccelerazioni(buffer);
+			misuraAccelerazioni(&A);
 			if(G.IsPresent == OK)
-				if( contatore == 2){
+				if( contatore == 1){
 					/// ogni 20 ms effettua il calcolo del PID
 					contatore = 0;
 					HWREG(GPIO_PORTB_BASE + (GPIO_O_DATA + (GPIO_PIN_0 << 2))) |=  GPIO_PIN_0;
